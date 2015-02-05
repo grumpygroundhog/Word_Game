@@ -54,7 +54,11 @@
 
         android:layout_below="@+id/scrambledWord"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="150dp"
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -76,6 +80,26 @@
         android:layout_above="@+id/getWord"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        android:textColor="#000000"
+        android:textSize="35sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Time:" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Game"
+        android:id="@+id/newGame"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/getWord"
+        android:layout_toEndOf="@+id/getWord"
+        android:layout_marginLeft="20dp" />
 
 
 </RelativeLayout>

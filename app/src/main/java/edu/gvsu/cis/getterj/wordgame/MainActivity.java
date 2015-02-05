@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.inputmethodservice.KeyboardView;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,18 +29,21 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
 
 public class MainActivity extends ActionBarActivity {
 
     TextView displayWord;
     Button getWord;
     String URL = "http://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minCorpusCount=10000&maxCorpusCount=-1&minDictionaryCount=20&maxDictionaryCount=-1&minLength=5&maxLength=-1&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5";
-    String scrambled="";
-    String currentWord="";
+    String scrambled = "";
+    String currentWord = "";
     Button checkWord;
     EditText inputWord;
     TextView score;
+    Button newGame;
     int scoreValue = 0;
+    TextView time;
     ProgressDialog progress;
 
 
@@ -48,11 +52,21 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        displayWord = (TextView)findViewById(R.id.scrambledWord);
-        getWord = (Button)findViewById(R.id.getWord);
-        checkWord = (Button)findViewById(R.id.checkWord);
-        inputWord = (EditText)findViewById(R.id.input);
-        score = (TextView)findViewById(R.id.score);
+        newGame = (Button) findViewById(R.id.newGame);
+        displayWord = (TextView) findViewById(R.id.scrambledWord);
+        getWord = (Button) findViewById(R.id.getWord);
+        time = (TextView) findViewById(R.id.time);
+        checkWord = (Button) findViewById(R.id.checkWord);
+        inputWord = (EditText) findViewById(R.id.input);
+        score = (TextView) findViewById(R.id.score);
+        newGame.setOnClickListener(new View.OnClickListener()
+             {
+             public void onClick(View v)
+                {
+                gameTimer();
+                }
+             }
+        );
         getWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,30 +79,55 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 String guess = inputWord.getText().toString().toLowerCase();
-                if(guess.equals(currentWord))
-                {
+                if (guess.equals(currentWord)) {
                     //You get a reward...
-                    scoreValue = scoreValue+10;
+                    scoreValue = scoreValue + 10;
                     score.setText("Score is:" + scoreValue);
                     GetWord resetWord = new GetWord();
                     resetWord.execute();
                     inputWord.setText(null);
 
-                }
-                else
-                {
+                } else {
                     //try again...
                     Toast.makeText(MainActivity.this, "Sorry, you guessed wrong!", Toast.LENGTH_LONG).show();
 
                 }
+
             }
         });
 
+
         GetWord firstWord = new GetWord();
         firstWord.execute();
+        this.gameTimer();
 
     }
 
+    public void gameTimer() {
+        newGame.setEnabled(false);
+        inputWord.setFocusableInTouchMode(true);
+        getWord.setEnabled(true);
+        checkWord.setEnabled(true);
+        score.setText("Score is:");
+
+        new CountDownTimer(60000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                time.setText("Time Left: " + millisUntilFinished / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                time.setText("Time Left: 0");
+                inputWord.setFocusable(false);
+                newGame.setEnabled(true);
+                getWord.setEnabled(false);
+                checkWord.setEnabled(false);
+
+            }
+        }.start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,25 +151,24 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public String scramble (String input)
-    {
+    public String scramble(String input) {
         ArrayList<Character> chars = new ArrayList<Character>(input.length());
-        for ( char c : input.toCharArray() ) {
+        for (char c : input.toCharArray()) {
             chars.add(c);
             Collections.shuffle(chars);
             char[] shuffled = new char[chars.size()];
-            for ( int i = 0; i < shuffled.length; i++ ) {
+            for (int i = 0; i < shuffled.length; i++) {
                 shuffled[i] = chars.get(i);
             }
-            scrambled = new String (shuffled);
+            scrambled = new String(shuffled);
 
 
         }
-    return scrambled;
+        return scrambled;
     }
 
-    private class GetWord extends AsyncTask <Void,Void,String>
-    {
+
+    private class GetWord extends AsyncTask<Void, Void, String> {
         @Override
         protected void onPreExecute() {
             progress = new ProgressDialog(MainActivity.this);
@@ -141,49 +179,44 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
 
-        protected String doInBackground(Void...params) {
-try {
+        protected String doInBackground(Void... params) {
+            try {
 
-    HttpClient client = new DefaultHttpClient();
-    HttpGet hget = new HttpGet(URL);
-    HttpResponse resp = client.execute(hget);
-    InputStream stream = resp.getEntity().getContent();
-    char[] buffer = new char[1024];
-    InputStreamReader reader = new InputStreamReader(stream);
-    int len;
-    StringBuffer sb = new StringBuffer();
-    len = reader.read(buffer, 0, 1024);
-    while (len != -1) { /* len is -1 when no more data to read */
-        sb.append(buffer, 0, len);
-        len = reader.read(buffer, 0, 1024); /* read the next chunk */
-    }
-    try {
-        JSONObject obj = new JSONObject(sb.toString());
-        currentWord = obj.getString("word").toLowerCase();
+                HttpClient client = new DefaultHttpClient();
+                HttpGet hget = new HttpGet(URL);
+                HttpResponse resp = client.execute(hget);
+                InputStream stream = resp.getEntity().getContent();
+                char[] buffer = new char[1024];
+                InputStreamReader reader = new InputStreamReader(stream);
+                int len;
+                StringBuffer sb = new StringBuffer();
+                len = reader.read(buffer, 0, 1024);
+                while (len != -1) { /* len is -1 when no more data to read */
+                    sb.append(buffer, 0, len);
+                    len = reader.read(buffer, 0, 1024); /* read the next chunk */
+                }
+                try {
+                    JSONObject obj = new JSONObject(sb.toString());
+                    currentWord = obj.getString("word").toLowerCase();
 
-    }
-    catch (JSONException e) {
-        Log.e("Oops!", "Error when parsing JSON string" + e.getMessage());
-    }
-
+                } catch (JSONException e) {
+                    Log.e("Oops!", "Error when parsing JSON string" + e.getMessage());
+                }
 
 
-    return currentWord;
-}
-            catch (IOException e) {
+                return currentWord;
+            } catch (IOException e) {
                 Log.e("OOPS", "There was an error " + e.getMessage());
                 return null;
             }
 
 
-
-
-    }
+        }
 
         @Override
-        protected void onPostExecute(String s)
-        {
+        protected void onPostExecute(String s) {
             displayWord.setText(scramble(s));
             progress.dismiss();
         }
-    }}
+    }
+}
