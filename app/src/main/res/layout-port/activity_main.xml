@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:id="@+id/activity_main"
+    android:background="#fffefefe">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/imageView"
+        android:src="@drawable/book"
+        android:scaleType="centerInside" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrambledWord"
+        android:gravity="center"
+        android:textSize="35sp"
+        android:autoText="false"
+        android:textColor="#000000"
+        android:layout_alignBottom="@+id/input"
+        android:layout_alignLeft="@+id/score"
+        android:layout_alignStart="@+id/score" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get New Word"
+        android:id="@+id/getWord"
+
+        android:layout_above="@+id/input"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input"
+        android:gravity="center"
+        android:hint="Descramble Here!"
+        android:elegantTextHeight="false"
+        android:textSize="25sp"
+        android:singleLine="false"
+        android:textColor="#000000"
+        android:autoText="false"
+        android:textColorHint="#000000"
+
+        android:layout_marginBottom="74dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Word"
+        android:id="@+id/checkWord"
+        android:layout_below="@+id/getWord"
+        android:layout_alignRight="@+id/getWord"
+        android:layout_alignEnd="@+id/getWord" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 0"
+        android:id="@+id/score"
+
+        android:textColor="#ff000000"
+        android:textSize="35sp"
+        android:layout_alignBaseline="@+id/checkWord"
+        android:layout_alignBottom="@+id/checkWord"
+        android:layout_alignLeft="@+id/input"
+        android:layout_alignStart="@+id/input" />
+
+
+</RelativeLayout>
