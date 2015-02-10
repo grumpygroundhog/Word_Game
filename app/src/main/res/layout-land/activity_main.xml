@@ -57,7 +57,9 @@
         android:layout_height="wrap_content"
         android:text="Check Word"
         android:id="@+id/checkWord"
-        android:layout_below="@+id/getWord"
+        android:layout_alignBottom="@+id/score"
+        android:layout_alignLeft="@+id/getWord"
+        android:layout_alignStart="@+id/getWord"
         android:layout_alignRight="@+id/getWord"
         android:layout_alignEnd="@+id/getWord" />
 
@@ -83,7 +85,9 @@
         android:id="@+id/newGame"
         android:layout_below="@+id/checkWord"
         android:layout_alignRight="@+id/checkWord"
-        android:layout_alignEnd="@+id/checkWord" />
+        android:layout_alignEnd="@+id/checkWord"
+        android:layout_alignLeft="@+id/checkWord"
+        android:layout_alignStart="@+id/checkWord" />
 
     <TextView
         android:layout_width="wrap_content"
